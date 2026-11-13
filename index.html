@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora de Cotizaciones – BC Studios</title>
+<style>
+:root{--g:#416d62;--bg:#f6f8f7;--t:#1b1f1e;--c:#fff;--b:#dce2df;--r:#c62828;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151918;--t:#ecf0ee;--c:#1f2524;--b:#364240}}
+html,body{margin:0}body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--t);font-size:14px}
+*{box-sizing:border-box}h1{font-size:18px;margin:0}
+header{background:var(--g);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+nav button{background:none;border:0;color:#fff;opacity:.7;padding:8px 12px;font-size:14px;cursor:pointer;border-bottom:3px solid transparent}
+nav button.on{opacity:1;font-weight:700;border-color:#fff}
+main{max-width:1100px;margin:auto;padding:18px;display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+@media(max-width:820px){main{grid-template-columns:1fr}}
+.card{background:var(--c);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px}
+.card h3{margin:0 0 10px;font-size:14px;color:var(--g)}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+label{display:block;font-size:12px;font-weight:600;opacity:.85}
+input,select,textarea{width:100%;margin-top:4px;padding:9px;border:1px solid var(--b);border-radius:6px;background:var(--bg);color:inherit;font:inherit}
+.btn{background:var(--g);color:#fff;border:0;border-radius:6px;padding:9px 13px;cursor:pointer;font:inherit;width:auto;margin:0}
+.btn.o{background:none;color:var(--g);border:1px solid var(--g)}
+.x{background:var(--r);color:#fff;border:0;border-radius:6px;width:32px;cursor:pointer;margin:0}
+.row{display:flex;gap:8px;margin-bottom:8px;align-items:center}.row input{margin:0}
+.res{position:sticky;top:8px;align-self:start;border:3px solid var(--g);border-radius:14px;background:var(--c);padding:16px}
+.l{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b)}.l.s{font-weight:700;border-top:2px solid var(--g)}
+.fin{background:var(--g);color:#fff;border-radius:8px;padding:14px;display:flex;justify-content:space-between;font-size:21px;font-weight:800;margin:10px 0}
+.q li{margin:4px 0}.q{margin:0;padding-left:18px}.mut{opacity:.7;font-size:12px}
+table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid var(--b);text-align:left}
+.sc{overflow-x:auto}
+[hidden]{display:none!important}#sheet{display:none}
+@media print{header,main,#t2,#t3,#st{display:none!important}#sheet{display:block;color:#000;background:#fff;padding:24px;font-size:13px}#sheet table td,#sheet table th{border-bottom:1px solid #bbb;color:#000}}
+</style></head><body>
+<header><h1>📸 Calculadora de Cotizaciones · BC Studios</h1>
+<nav><button class="on" data-t="t1">Cotizar</button><button data-t="t2">Mis costos</button><button data-t="t3">Historial</button></nav></header>
+
+<div id="t1"><main>
+<div>
+<div class="card"><h3>1 · Cliente y servicio</h3><div class="g">
+<label>Cliente<input data-k="cli" id="cli"></label>
+<label>DNI / RUC<input data-k="dni" id="dni"></label>
+<label>Celular / WhatsApp<input type="tel" data-k="cel" id="cel"></label>
+<label>Correo electrónico<input type="email" data-k="mail" id="mail"></label>
+<label>Dirección del cliente<input data-k="dir" id="dir"></label>
+<label>Fecha de la sesión<input type="date" data-k="fec" id="fec"></label>
+<label>Hora de inicio<input type="time" data-k="hi" id="hi"></label>
+<label>Hora de fin<input type="time" data-k="hf" id="hf"></label>
+<label>Lugar del servicio (dirección)<input data-k="lug" id="lug"></label>
+<label>Tipo de servicio<select data-k="tipo" id="tipo"><option value="prod">Producto</option><option value="jor">Jornada (por horas)</option><option value="per">Por persona</option></select></label>
+</div></div>
+
+<div class="card"><h3>2 · Datos del trabajo</h3>
+<div class="g grp" data-t="prod"><label>N.º de productos<input type="number" data-k="np" id="np" value="10"></label><label>Fotos por producto<input type="number" data-k="fp" id="fp" value="3"></label><label>Min. de toma por producto<input type="number" data-k="mp" id="mp" value="20"></label></div>
+<div class="g grp" data-t="jor"><label>Horas de sesión<input type="number" data-k="hs" id="hs" value="4"></label><label>Asistentes<input type="number" data-k="as" id="as" value="0"></label><label>Horas de traslado<input type="number" data-k="tr" id="tr" value="0.5"></label><label>Fotos a entregar (aprox.)<input type="number" data-k="ft" id="ft" value="120"></label></div>
+<div class="g grp" data-t="per"><label>N.º de personas<input type="number" data-k="pp" id="pp" value="10"></label><label>Min. por persona<input type="number" data-k="mpp" id="mpp" value="15"></label><label>Fotos finales por persona<input type="number" data-k="fpp" id="fpp" value="2"></label></div>
+<div class="g" style="margin-top:10px"><label>Min. de retoque por foto<input type="number" data-k="mr" id="mr" value="6"></label>
+<label>Complejidad<select data-k="cx" id="cx"><option value="1">Básica</option><option value="1.25">Media</option><option value="1.5">Alta</option></select></label></div></div>
+
+<div class="card"><h3>3 · Extras y condiciones</h3><div class="g">
+<label>Movilidad / viáticos (S/)<input type="number" data-k="mov" id="mov" value="0"></label>
+<label>Equipo especial (S/)<input type="number" data-k="eqe" id="eqe" value="0"></label>
+<label>Impresiones / álbum (S/)<input type="number" data-k="imp" id="imp" value="0"></label>
+<label>Licencia de uso<select data-k="lic" id="lic"><option value="0">Personal / sin cargo</option><option value="15">Web y redes (+15%)</option><option value="40">Publicidad (+40%)</option><option value="80">Exclusividad (+80%)</option></select></label>
+<label>Entrega<select data-k="urg" id="urg"><option value="0">Normal</option><option value="25">Rápida 48 h (+25%)</option><option value="50">Urgente 24 h (+50%)</option></select></label>
+<label>Descuento (%)<input type="number" data-k="desc" id="desc" value="0"></label>
+<label>Plazo de entrega (días)<input type="number" data-k="pz" id="pz" value="5"></label>
+<label>Correcciones incluidas<input type="number" data-k="cor" id="cor" value="1"></label>
+<label>Forma de pago<select data-k="pago" id="pago"><option>Yape</option><option>Plin</option><option>Transferencia</option><option>Efectivo</option></select></label></div>
+<label style="margin-top:10px">Notas del cliente<textarea data-k="nota" id="nota" rows="3"></textarea></label></div>
+
+<div class="card"><h3>Preguntas clave para el cliente</h3><ul class="q" id="qs"></ul></div>
+</div>
+
+<aside class="res">
+<div id="rl"></div>
+<div class="fin"><span>TOTAL</span><span id="tot"></span></div>
+<div class="l"><span>Adelanto</span><b id="ad"></b></div><div class="l"><span>Saldo</span><b id="sa"></b></div>
+<div class="l"><span id="ul"></span><b id="uv"></b></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn" id="save">Guardar</button><button class="btn o" id="print">Cotización PDF</button><button class="btn o" id="contr">Contrato PDF</button><button class="btn o" id="xq">Excel de esta cotización</button><button class="btn o" id="new">Nueva</button></div>
+<div id="st" class="mut" style="margin-top:8px;min-height:16px"></div>
+</aside></main></div>
+
+<div id="t2" hidden><main style="grid-template-columns:1fr"><div>
+<div class="card"><h3>Parámetros</h3><div class="g" id="pg"></div></div>
+<div class="card"><h3>Mis datos (cotización y contrato)</h3><div class="g" id="dg"></div></div>
+<div class="card"><h3>Gastos fijos mensuales (S/)</h3><div id="fl"></div><button class="btn o" id="fa">+ Agregar</button></div>
+<div class="card"><h3>Equipo (precio S/ y vida útil en meses)</h3><div id="el"></div><button class="btn o" id="ea">+ Agregar</button></div>
+<div class="card"><h3>Conexión con Google Sheets</h3>
+<label>URL de tu Apps Script (termina en /exec)<input id="su" placeholder="https://script.google.com/macros/s/.../exec"></label>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn" id="sg">⬆ Guardar todo en Sheets</button><button class="btn o" id="sl">⬇ Cargar desde Sheets</button></div>
+<div id="ss" class="mut" style="margin-top:8px;min-height:16px"></div></div>
+<p class="mut">Gastos por sesión = (gastos fijos + equipo ÷ vida útil) ÷ sesiones por mes. Los datos se guardan en este navegador.</p></div></main></div>
+
+<div id="t3" hidden><main style="grid-template-columns:1fr"><div class="card"><h3>Cotizaciones guardadas</h3><div class="sc"><table id="ht"></table></div><div style="margin-top:10px"><button class="btn o" id="xl">Exportar Excel</button></div></div></main></div>
+
+<div id="sheet"></div>
+
+<script>
+const $=i=>document.getElementById(i),num=i=>parseFloat($(i).value)||0,m=x=>'S/ '+x.toFixed(2);
+const K='bcq_',ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(K+k))||d}catch(e){return d}},sv=(k,v)=>{try{localStorage.setItem(K+k,JSON.stringify(v))}catch(e){}};
+let P=ld('p',{tarifa:60,asist:30,ses:12,margen:30,igv:18,ret:0,adel:50});
+let F=ld('f',[['Seguros',80],['Software',45],['Web / hosting',20],['Estudio',200]]);
+let E=ld('e',[['Cámara',9000,36],['Lente 24-70',6000,48],['Flash',1500,36]]);
+let H=ld('h',[]),R={};
+let D=ld('d',{nom:'Pool Bustamante (BC Studios)',doc:'',dir:'',tel:'',mail:''});
+const DL={nom:'Nombre o razón social',doc:'DNI / RUC',dir:'Dirección',tel:'Celular',mail:'Correo'};
+const PL={tarifa:'Tarifa hora (S/)',asist:'Tarifa asistente/hora (S/)',ses:'Sesiones por mes',margen:'Margen (%)',igv:'IGV (%)',ret:'Retención renta (%)',adel:'Adelanto (%)'};
+const QS={prod:['¿Cuántos productos y cuántas fotos por producto?','¿Fondo blanco, de color o ambientada? ¿Con modelo o manos?','¿Material brillante o delicado? ¿Van al estudio o voy yo?','¿Dónde se publicará? (tienda, redes, catálogo)','¿Necesitan recorte o fondo transparente?'],
+jor:['¿Qué se cubre y en qué horario? ¿Cuántas ubicaciones?','¿Solo foto o foto + video? ¿Cuántos fotógrafos?','¿Tomas obligatorias y cuántas fotos esperan?','¿Necesitan entrega exprés el mismo día?','¿Quién cubre alimentación y movilidad?'],
+per:['¿Cuántas personas y cuánto tiempo hay por persona?','¿Mismo fondo y estilo? ¿Dónde se hará? (oficina o estudio)','¿Cuántas fotos retocadas por persona y qué nivel de retoque?','¿Para qué se usarán? (LinkedIn, web, credencial)','¿Cómo se entregan? (individual o galería) ¿Aplica descuento por volumen?']};
+const COM=['¿Para qué usarán las fotos y por cuánto tiempo?','¿Fecha límite de entrega?','¿Presupuesto referencial? ¿Qué prioriza: precio, estilo o rapidez?'];
+
+function calc(){
+ const t=$('tipo').value,cx=num('cx');let hs,fotos,u,ul;
+ if(t=='prod'){hs=num('np')*num('mp')/60;fotos=num('np')*num('fp');u=Math.max(num('np'),1);ul='Precio por producto'}
+ else if(t=='jor'){hs=num('hs')+num('tr');fotos=num('ft');u=Math.max(num('hs'),1);ul='Precio por hora de sesión'}
+ else{hs=num('pp')*num('mpp')/60;fotos=num('pp')*num('fpp');u=Math.max(num('pp'),1);ul='Precio por persona'}
+ const ed=fotos*num('mr')/60,horas=(hs+ed)*cx,ses=Math.max(P.ses,1);
+ const over=(F.reduce((a,x)=>a+x[1],0)+E.reduce((a,x)=>a+x[1]/Math.max(x[2]||1,1),0))/ses;
+ const tiempo=horas*P.tarifa,asi=t=='jor'?num('as')*num('hs')*P.asist:0,ext=num('mov')+num('eqe')+num('imp');
+ const base=over+tiempo+asi+ext,mg=base*P.margen/100,s0=base+mg,lic=s0*num('lic')/100,urg=s0*num('urg')/100;
+ const dsc=(s0+lic+urg)*num('desc')/100,sub=s0+lic+urg-dsc,igv=sub*P.igv/100,ret=sub*P.ret/100,tot=sub+igv-ret,ad=tot*P.adel/100;
+ R={t,hs,ed,horas,fotos,over,tiempo,asi,ext,base,mg,lic,urg,dsc,sub,igv,ret,tot,ad,sa:tot-ad,u:tot/u,ul};
+ const L=(a,b,c)=>`<div class="l ${c||''}"><span>${a}</span><b>${b}</b></div>`;
+ $('rl').innerHTML=L('Gastos por sesión',m(over))+L(`Tiempo (${horas.toFixed(1)} h)`,m(tiempo))+(asi?L('Asistentes',m(asi)):'')+L('Extras',m(ext))+L('Precio base',m(base),'s')+L(`+ Margen ${P.margen}%`,m(mg))+(lic?L('+ Licencia',m(lic)):'')+(urg?L('+ Urgencia',m(urg)):'')+(dsc?L('− Descuento','−'+m(dsc)):'')+L('Subtotal',m(sub),'s')+L(`+ IGV ${P.igv}%`,m(igv))+(ret?L('− Retención','−'+m(ret)):'');
+ $('tot').textContent=m(tot);$('ad').textContent=m(R.ad);$('sa').textContent=m(R.sa);$('ul').textContent=ul;$('uv').textContent=m(R.u);
+}
+function showType(){const t=$('tipo').value;document.querySelectorAll('.grp').forEach(g=>g.hidden=g.dataset.t!=t);
+ $('qs').innerHTML=[...QS[t],...COM].map(q=>`<li>${q}</li>`).join('');calc()}
+document.querySelectorAll('#t1 input,#t1 select,#t1 textarea').forEach(e=>e.addEventListener('input',()=>e.id=='tipo'?showType():calc()));
+
+// pestañas
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x==b));['t1','t2','t3'].forEach(i=>$(i).hidden=i!=b.dataset.t);if(b.dataset.t=='t3')hist();if(b.dataset.t=='t1')calc()});
+
+// costos
+function costos(){
+ $('dg').innerHTML=Object.keys(DL).map(k=>`<label>${DL[k]}<input data-d="${k}" value="${esc(D[k]||'')}"></label>`).join('');$('dg').querySelectorAll('input').forEach(i=>i.oninput=()=>{D[i.dataset.d]=i.value;sv('d',D)});
+ $('pg').innerHTML=Object.keys(PL).map(k=>`<label>${PL[k]}<input type="number" data-p="${k}" value="${P[k]}"></label>`).join('');
+ $('pg').querySelectorAll('input').forEach(i=>i.oninput=()=>{P[i.dataset.p]=parseFloat(i.value)||0;sv('p',P)});
+ const lst=(id,A,key,ph)=>{$(id).innerHTML='';A.forEach((it,i)=>{const d=document.createElement('div');d.className='row';
+  d.innerHTML=`<input placeholder="Concepto"><input type="number" style="width:110px" placeholder="${ph[0]}">`+(key=='e'?`<input type="number" style="width:90px" placeholder="Meses">`:'')+'<button class="x">×</button>';
+  const [a,b,c]=d.querySelectorAll('input');a.value=it[0];b.value=it[1];a.oninput=()=>{it[0]=a.value;sv(key,A)};b.oninput=()=>{it[1]=parseFloat(b.value)||0;sv(key,A)};
+  if(c){c.value=it[2];c.oninput=()=>{it[2]=parseFloat(c.value)||1;sv(key,A)}}
+  d.querySelector('.x').onclick=()=>{A.splice(i,1);sv(key,A);costos()};$(id).appendChild(d)})};
+ lst('fl',F,'f',['S/ mes']);lst('el',E,'e',['Precio S/']);
+}
+$('fa').onclick=()=>{F.push(['',0]);costos()};$('ea').onclick=()=>{E.push(['',0,36]);costos()};
+
+// guardar / historial
+const snap=()=>{const o={};document.querySelectorAll('[data-k]').forEach(e=>o[e.dataset.k]=e.value);return o};
+const TN={prod:'Producto',jor:'Jornada',per:'Por persona'};
+$('save').onclick=()=>{calc();H.unshift({id:Date.now(),fec:new Date().toISOString().slice(0,10),cli:$('cli').value||'(sin nombre)',tipo:TN[R.t],tot:+R.tot.toFixed(2),est:'Pendiente',d:snap(),r:Object.fromEntries(Object.entries(R).filter(e=>typeof e[1]=='number').map(e=>[e[0],+e[1].toFixed(2)]))});sv('h',H);$('st').textContent='✓ Cotización guardada'};
+$('new').onclick=()=>{document.querySelectorAll('#t1 [data-k]').forEach(e=>{if(['cli','dni','cel','mail','dir','fec','hi','hf','lug','nota'].includes(e.id))e.value='';if(['mov','eqe','imp','desc'].includes(e.id))e.value=0});calc()};
+function hist(){const t=$('ht');t.innerHTML='<tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Total</th><th>Estado</th><th></th></tr>'+(H.length?'':'<tr><td colspan="6" class="mut">Aún no hay cotizaciones.</td></tr>');
+ H.forEach((h,i)=>{const r=t.insertRow();r.innerHTML=`<td>${h.fec}</td><td></td><td>${h.tipo}</td><td>${m(h.tot)}</td><td><select style="margin:0">${['Pendiente','Enviada','Aceptada','Rechazada'].map(s=>`<option ${s==h.est?'selected':''}>${s}</option>`).join('')}</select></td><td><button class="btn o" style="margin-right:4px">Abrir</button><button class="x">×</button></td>`;
+  r.cells[1].textContent=h.cli;r.querySelector('select').onchange=e=>{h.est=e.target.value;sv('h',H)};
+  r.querySelector('.btn').onclick=()=>{for(const k in h.d)if($(k))$(k).value=h.d[k];document.querySelector('nav button').click();showType()};
+  r.querySelector('.x').onclick=()=>{H.splice(i,1);sv('h',H);hist()}})}
+function lib(){return new Promise(ok=>{if(window.XLSX)return ok();const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=ok;document.head.appendChild(s)})}
+
+// ---- impresos y Excel ----
+const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const bl=(s,w)=>s?esc(s):'<span style="border-bottom:1px solid #000;display:inline-block;min-width:'+(w||130)+'px">&nbsp;</span>';
+const fdate=s=>s?new Date(s+'T00:00').toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric'}):'';
+const ot=(k,d)=>{const o=document.querySelector('#'+k+' option[value="'+d[k]+'"]');return o?o.textContent:d[k]};
+function doc(h){$('sheet').innerHTML='<div style="line-height:1.45">'+h+'</div>';try{window.print()}catch(e){$('st').textContent='Usa Ctrl/Cmd + P para imprimir.'}}
+function ctx(){calc();const d=snap();return{d,det:{prod:num('np')+' productos · '+num('fp')+' fotos c/u',jor:num('hs')+' horas de sesión',per:num('pp')+' personas · '+num('fpp')+' foto(s) retocada(s) c/u'}[R.t]}}
+const hora=d=>d.hi?esc(d.hi)+(d.hf?' – '+esc(d.hf):''):'por coordinar';
+$('print').onclick=()=>{const{d,det}=ctx(),serv=R.base-R.ext+R.mg,row=(a,b)=>`<tr><td>${a}</td><td style="text-align:right">${b}</td></tr>`;
+ doc(`<h2 style="margin:0">${esc(D.nom)} · Cotización</h2><p>${esc([D.doc&&'DNI/RUC '+D.doc,D.tel,D.mail].filter(Boolean).join(' · '))}<br>Fecha de emisión: ${new Date().toLocaleDateString('es-PE')}</p>
+<p><b>Cliente:</b> ${esc(d.cli)}${d.dni?' · DNI/RUC '+esc(d.dni):''}<br><b>Contacto:</b> ${esc([d.cel,d.mail].filter(Boolean).join(' · '))}<br><b>Fecha y hora:</b> ${fdate(d.fec)||'Por coordinar'} · ${hora(d)}<br><b>Lugar:</b> ${esc(d.lug)||'Por coordinar'}<br><b>Servicio:</b> ${TN[R.t]} — ${det}</p>
+<table>${row('Servicio fotográfico (sesión, edición y retoque)',m(serv))}${R.ext?row('Movilidad, equipo especial e impresiones',m(R.ext)):''}${R.lic?row('Licencia de uso',m(R.lic)):''}${R.urg?row('Entrega prioritaria',m(R.urg)):''}${R.dsc?row('Descuento','−'+m(R.dsc)):''}${row('<b>Subtotal</b>','<b>'+m(R.sub)+'</b>')}${P.igv?row('IGV '+P.igv+'%',m(R.igv)):''}${R.ret?row('Retención','−'+m(R.ret)):''}${row('<b>TOTAL</b>','<b>'+m(R.tot)+'</b>')}${row('Adelanto para reservar ('+P.adel+'%)',m(R.ad))}${row('Saldo',m(R.sa))}</table>
+<p style="margin-top:12px">Plazo de entrega: ${esc(d.pz)} días tras la sesión. Incluye ${esc(d.cor)} ronda(s) de correcciones. Forma de pago: ${esc(d.pago)}. Validez de la cotización: 7 días.</p>`)};
+$('contr').onclick=()=>{const{d,det}=ctx(),p=(t)=>`<p style="text-align:justify;margin:7px 0">${t}</p>`;
+ doc(`<h2 style="text-align:center;margin:0 0 10px">CONTRATO DE PRESTACIÓN DE SERVICIOS FOTOGRÁFICOS</h2>`+
+ p(`Conste por el presente documento el contrato que celebran, de una parte, <b>${bl(D.nom,180)}</b>, con DNI/RUC N.º ${bl(D.doc,90)}, con domicilio en ${bl(D.dir,200)}, en adelante <b>EL FOTÓGRAFO</b>; y de la otra parte, <b>${bl(d.cli,180)}</b>, con DNI/RUC N.º ${bl(d.dni,90)}, con domicilio en ${bl(d.dir,200)}, celular ${bl(d.cel,90)}, correo ${bl(d.mail,150)}, en adelante <b>EL CLIENTE</b>, en los términos siguientes:`)+
+ p(`<b>PRIMERA – Objeto.</b> EL FOTÓGRAFO prestará el servicio de fotografía (${TN[R.t].toLowerCase()}): ${det}. Detalles y entregables acordados: ${bl(d.nota,200)}.`)+
+ p(`<b>SEGUNDA – Fecha, hora y lugar.</b> El servicio se realizará el ${bl(fdate(d.fec),130)}, de ${hora(d)}, en ${bl(d.lug,220)}. Las horas adicionales se cobrarán a ${m(P.tarifa)} por hora, sujetas a disponibilidad.`)+
+ p(`<b>TERCERA – Precio y forma de pago.</b> El precio total es <b>${m(R.tot)}</b>${P.igv?' (incluye IGV)':''}. EL CLIENTE pagará un adelanto de ${m(R.ad)} (${P.adel}%) para reservar la fecha, y el saldo de ${m(R.sa)} a más tardar el día del servicio. Medio de pago: ${esc(d.pago)}.`)+
+ p(`<b>CUARTA – Entrega.</b> EL FOTÓGRAFO entregará aproximadamente ${Math.round(R.fotos)} fotografías editadas mediante enlace digital, dentro de ${esc(d.pz)} días calendario posteriores al servicio. Se incluyen ${esc(d.cor)} ronda(s) de correcciones.`)+
+ p(`<b>QUINTA – Derechos de uso.</b> EL FOTÓGRAFO conserva la autoría de las imágenes. EL CLIENTE recibe licencia de uso: ${esc(ot('lic',d))}. EL FOTÓGRAFO podrá incluir las imágenes en su portafolio y redes, salvo pacto escrito en contrario.`)+
+ p(`<b>SEXTA – Reprogramación y cancelación.</b> Cualquier cambio debe avisarse con al menos 48 horas de anticipación; se permite una reprogramación sin costo, sujeta a disponibilidad. La cancelación con menos de 48 horas o la inasistencia de EL CLIENTE implica la pérdida del adelanto.`)+
+ p(`<b>SÉPTIMA – Obligaciones del cliente.</b> EL CLIENTE facilitará el acceso al lugar, a las personas y a los productos en el horario acordado. Los retrasos que reduzcan el tiempo del servicio no extienden la duración ni modifican el precio.`)+
+ p(`<b>OCTAVA – Fuerza mayor.</b> Si EL FOTÓGRAFO no pudiera asistir por enfermedad o causa de fuerza mayor, reprogramará el servicio o devolverá lo pagado.`)+
+ p(`<b>NOVENA – Jurisdicción.</b> Las partes se someten a los jueces y tribunales de Lima, Perú.`)+
+ p(`Firmado en Lima, el ${bl(fdate(new Date().toISOString().slice(0,10)),130)}, en dos ejemplares.`)+
+ `<table style="margin-top:50px"><tr><td style="border:0;text-align:center;width:50%">______________________________<br><b>EL FOTÓGRAFO</b><br>${esc(D.nom)}<br>DNI/RUC: ${esc(D.doc)}</td><td style="border:0;text-align:center">______________________________<br><b>EL CLIENTE</b><br>${esc(d.cli)}<br>DNI/RUC: ${esc(d.dni)}</td></tr></table>`)};
+
+const FL=[['Cliente','cli'],['DNI / RUC','dni'],['Celular','cel'],['Correo','mail'],['Dirección del cliente','dir'],['Fecha de la sesión','fec'],['Hora de inicio','hi'],['Hora de fin','hf'],['Lugar del servicio','lug'],['Tipo de servicio','tipo']];
+const FT={prod:[['N.º de productos','np'],['Fotos por producto','fp'],['Min. de toma por producto','mp']],jor:[['Horas de sesión','hs'],['Asistentes','as'],['Horas de traslado','tr'],['Fotos a entregar','ft']],per:[['N.º de personas','pp'],['Min. por persona','mpp'],['Fotos finales por persona','fpp']]};
+const FC=[['Min. de retoque por foto','mr'],['Complejidad','cx']];
+const FE=[['Movilidad (S/)','mov'],['Equipo especial (S/)','eqe'],['Impresiones (S/)','imp'],['Licencia de uso','lic'],['Entrega','urg'],['Descuento (%)','desc'],['Plazo de entrega (días)','pz'],['Correcciones incluidas','cor'],['Forma de pago','pago'],['Notas del cliente','nota']];
+const CL=[['Horas totales','horas'],['Gastos por sesión','over'],['Costo de tiempo','tiempo'],['Asistentes (S/)','asi'],['Extras (S/)','ext'],['Precio base','base'],['Margen','mg'],['Licencia (S/)','lic'],['Urgencia (S/)','urg'],['Descuento (S/)','dsc'],['Subtotal','sub'],['IGV','igv'],['Retención','ret'],['TOTAL','tot'],['Adelanto','ad'],['Saldo','sa'],['Precio unitario','u']];
+const NUMK='np fp mp hs as tr ft pp mpp fpp mr mov eqe imp desc pz cor'.split(' ');
+const fv=(d,k)=>{let v=d[k];if(['tipo','cx','lic','urg'].includes(k))v=ot(k,d);return NUMK.includes(k)&&v!==''&&!isNaN(v)?+v:(v==null?'':v)};
+const rv=(r,k)=>r&&typeof r[k]=='number'?+r[k].toFixed(2):'';
+const other=(k,t)=>Object.keys(FT).some(x=>x!=t&&FT[x].some(f=>f[1]==k));
+async function xout(list,cur){const dl=window.claude&&claude.use?await claude.use('downloads'):null;await lib();const wb=XLSX.utils.book_new(),A=[...FL,...FT.prod,...FT.jor,...FT.per,...FC,...FE];
+ if(cur){const it=list[0],t=it.d.tipo,a=[['COTIZACIÓN – '+(it.d.cli||'sin nombre')],[],['CLIENTE Y SERVICIO']];
+  FL.forEach(f=>a.push([f[0],fv(it.d,f[1])]));a.push([],['DATOS DEL TRABAJO']);[...FT[t],...FC].forEach(f=>a.push([f[0],fv(it.d,f[1])]));
+  a.push([],['EXTRAS Y CONDICIONES']);FE.forEach(f=>a.push([f[0],fv(it.d,f[1])]));a.push([],['CÁLCULO (S/)']);CL.forEach(f=>a.push([f[0],rv(it.r,f[1])]));
+  const ws=XLSX.utils.aoa_to_sheet(a);ws['!cols']=[{wch:32},{wch:46}];XLSX.utils.book_append_sheet(wb,ws,'Detalle')}
+ const rows=[['Fecha guardada','Estado',...A.map(f=>f[0]),...CL.map(f=>f[0])],...list.map(it=>[it.fec,it.est,...A.map(f=>other(f[1],it.d.tipo)?'':fv(it.d,f[1])),...CL.map(f=>rv(it.r,f[1]))])];
+ const ws2=XLSX.utils.aoa_to_sheet(rows);ws2['!cols']=rows[0].map(h=>({wch:Math.max(12,String(h).length+2)}));XLSX.utils.book_append_sheet(wb,ws2,'Cotizaciones');
+ const fn=cur?'cotizacion-'+(list[0].d.cli||'cliente').replace(/[^\w]+/g,'-')+'.xlsx':'cotizaciones-bc-studios.xlsx';
+ try{if(dl)await dl.save({filename:fn,data:XLSX.write(wb,{type:'array',bookType:'xlsx'})});else XLSX.writeFile(wb,fn)}catch(e){}}
+$('xl').onclick=()=>xout(H);
+$('xq').onclick=()=>{calc();xout([{d:snap(),r:R,fec:new Date().toISOString().slice(0,10),est:'Borrador'}],true)};
+
+// ---- Google Sheets ----
+$('su').value=ld('u','');$('su').onchange=()=>sv('u',$('su').value.trim());
+const SU=()=>{const u=$('su').value.trim();if(!u){$('ss').textContent='Pega primero la URL de Apps Script.';return null}return u};
+$('sg').onclick=async()=>{const u=SU();if(!u)return;$('ss').textContent='Guardando…';
+ const body={config:[...Object.entries(P),...Object.entries(D).map(e=>['d_'+e[0],e[1]])],costos:[...F.map(x=>['fijo',x[0],x[1],'']),...E.map(x=>['equipo',x[0],x[1],x[2]])],hist:H.map(h=>[h.id,h.fec,h.cli,h.tipo,h.tot,h.est,JSON.stringify({d:h.d,r:h.r})])};
+ try{await fetch(u,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(body)});$('ss').textContent='✓ Guardado en Google Sheets'}catch(e){$('ss').textContent='Error: '+e.message}};
+$('sl').onclick=async()=>{const u=SU();if(!u)return;$('ss').textContent='Cargando…';
+ try{const j=await (await fetch(u)).json();for(const k in j.config){if(k.startsWith('d_'))D[k.slice(2)]=String(j.config[k]);else P[k]=parseFloat(j.config[k])||0}sv('d',D);
+  F=j.costos.filter(x=>x[0]=='fijo').map(x=>[String(x[1]),+x[2]||0]);E=j.costos.filter(x=>x[0]=='equipo').map(x=>[String(x[1]),+x[2]||0,+x[3]||36]);
+  H=j.hist.map(r=>{let d={},x={};try{x=JSON.parse(r[6]);d=x.d||x}catch(e){}return{id:r[0],fec:String(r[1]),cli:String(r[2]),tipo:r[3],tot:+r[4]||0,est:r[5]||'Pendiente',d,r:x.r||{}}});
+  sv('p',P);sv('f',F);sv('e',E);sv('h',H);costos();calc();$('ss').textContent='✓ Datos cargados desde Sheets'}catch(e){$('ss').textContent='Error: '+e.message}};
+
+costos();showType();
+</script></body></html>
